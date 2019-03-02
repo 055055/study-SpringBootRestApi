@@ -14,7 +14,6 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 @Controller
@@ -28,8 +27,15 @@ public class EventController {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    EventValidator eventValidator;
+
     @PostMapping
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors ){
+        if(errors.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
+        eventValidator.validate(eventDto, errors);
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
