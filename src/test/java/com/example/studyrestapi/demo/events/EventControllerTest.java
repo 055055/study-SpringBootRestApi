@@ -131,7 +131,11 @@ public class EventControllerTest {
                 .accept(MediaTypes.HAL_JSON) //HAL 형식으로 받고 싶다.
                 .content(objectMapper.writeValueAsString(event)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$[0].objectName").exists())
+                .andExpect(jsonPath("$[0].defaultMessage").exists())
+                .andExpect(jsonPath("$[0].code").exists())
+        ;
 
     }
 }
