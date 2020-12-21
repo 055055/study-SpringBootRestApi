@@ -8,7 +8,7 @@ import org.springframework.validation.Errors;
 
 import java.io.IOException;
 
-//Errors class json으로 serialize 안되서 만든 클래스
+//Errors class json으로 serialize 안되서 만든 클래스 JsonSerializer 상속
 @JsonComponent //errors 객체 serialize할 때 objectmapper사용
 public class ErrosSerializer extends JsonSerializer<Errors> {
     @Override

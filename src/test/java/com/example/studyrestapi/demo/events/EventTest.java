@@ -37,7 +37,7 @@ public class EventTest {
     }
 
     @Test
-    //junitparams 사용으로 테스트 시, 파라미터 사용 가능
+    //junitparams library 사용으로 테스트 시, 파라미터 사용 가능
     @Parameters(method = "paramsForTestFre")
 /*
     @Parameters({
