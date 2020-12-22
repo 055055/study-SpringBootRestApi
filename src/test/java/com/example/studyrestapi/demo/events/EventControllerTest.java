@@ -1,29 +1,14 @@
 package com.example.studyrestapi.demo.events;
 
-import com.example.studyrestapi.demo.common.RestDocsConfiguration;
+import com.example.studyrestapi.demo.common.BaseControllerTest;
 import com.example.studyrestapi.demo.common.TestDescription;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
@@ -36,24 +21,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
-@ActiveProfiles("test") //application-test.properteis를 사용하겠다.
-public class EventControllerTest {
-    @Autowired
-    MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+public class EventControllerTest extends BaseControllerTest {
 
     @Autowired
     EventRepository eventRepository;
 
-    @Autowired
-    ModelMapper modelMapper;
 
     @Test
     @TestDescription("정상적으로 이벤트를 생성하는 테스트")
@@ -281,9 +254,9 @@ public class EventControllerTest {
         eventDto.setName(eventName);
 
         //When & Then
-        this.mockMvc.perform(put("/api/envets/{id}",event.getId())
+        this.mockMvc.perform(put("/api/events/{id}",event.getId())
                                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                                .contentType(this.objectMapper.writeValueAsString(eventDto))
+                                .content(this.objectMapper.writeValueAsString(eventDto))
                              )
                             .andDo(print())
                             .andExpect(status().isOk())
@@ -302,14 +275,12 @@ public class EventControllerTest {
         EventDto eventDto =  new EventDto();
 
         //When & Then
-        this.mockMvc.perform(put("/api/envets/{id}",event.getId())
+        this.mockMvc.perform(put("/api/events/{id}",event.getId())
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
-                            .contentType(this.objectMapper.writeValueAsString(eventDto))
+                            .content((this.objectMapper.writeValueAsString(eventDto)))
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("name").value(eventDto))
-                .andExpect(jsonPath("_links.self").exists())
         ;
 
     }
@@ -324,14 +295,12 @@ public class EventControllerTest {
         eventDto.setBasePrice(200000);
         eventDto.setMaxPrice(1000);
         //When & Then
-        this.mockMvc.perform(put("/api/envets/{id}",event.getId())
+        this.mockMvc.perform(put("/api/events/{id}",event.getId())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .contentType(this.objectMapper.writeValueAsString(eventDto))
-        )
+                .content(this.objectMapper.writeValueAsString(eventDto))
+                )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("name").value(eventDto))
-                .andExpect(jsonPath("_links.self").exists())
         ;
 
     }
@@ -344,14 +313,12 @@ public class EventControllerTest {
         EventDto eventDto =  this.modelMapper.map(event,EventDto.class);
 
         //When & Then
-        this.mockMvc.perform(put("/api/envets/1231123")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .contentType(this.objectMapper.writeValueAsString(eventDto))
-                )
+        this.mockMvc.perform(put("/api/events/1231123")
+                          .contentType(MediaType.APPLICATION_JSON_UTF8)
+                         .content((this.objectMapper.writeValueAsString(eventDto)))
+                 )
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("name").value(eventDto))
-                .andExpect(jsonPath("_links.self").exists())
         ;
 
     }
