@@ -1,24 +1,32 @@
 package com.example.studyrestapi.demo.accounts;
 
+import org.hamcrest.Matchers;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.assertj.core.api.AssertionsForClassTypes.useDefaultDateFormatsOnly;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class AccountServiceTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Autowired
     AccountService accountService;
@@ -52,4 +60,20 @@ public class AccountServiceTest {
         assertThat(userDetails.getPassword()).isEqualTo(password);
 
     }
+
+
+    @Test
+    public void findByUsernameFail(){
+        //Expected
+        //미리 발생할 예외 정의
+        String username = "random@email.com";
+        expectedException.expect(UsernameNotFoundException.class);
+        expectedException.expectMessage(Matchers.containsString(username));
+
+        //When
+        accountService.loadUserByUsername(username);
+
+
+    }
+
 }
