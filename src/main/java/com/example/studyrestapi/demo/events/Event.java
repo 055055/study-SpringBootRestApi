@@ -1,6 +1,8 @@
 package com.example.studyrestapi.demo.events;
 
+import com.example.studyrestapi.demo.accounts.Account;
 import lombok.*;
+import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,6 +32,8 @@ public class Event {
     private boolean free;
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus = EventStatus.DRAFT;
+    @ManyToOne
+    private Account manager;
 
     public void update(){
         //update free
