@@ -1,5 +1,6 @@
 package com.example.studyrestapi.demo.configs;
 
+import com.example.studyrestapi.demo.common.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    AppProperties appProperties;
 
     @Autowired
     TokenStore tokenStore;
@@ -38,10 +41,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         //inmemory에 저장하겠다. jdbc로 바꿔줘도됨
         clients.inMemory()
-                .withClient("myApp")
+                .withClient(appProperties.getClientId())
                 .authorizedGrantTypes("password","refresh_token") //password, refresh_token 방식 사용하겠다.
                 .scopes("read", "write")//사용자가 정하기 나름
-                .secret(this.passwordEncoder.encode("pass"))
+                .secret(this.passwordEncoder.encode(appProperties.getClientSecret()))
                 .accessTokenValiditySeconds(10 * 60)//10분
                 .refreshTokenValiditySeconds(6 * 10 * 60)//1시간
         ;

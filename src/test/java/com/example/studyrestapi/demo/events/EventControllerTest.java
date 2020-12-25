@@ -4,9 +4,9 @@ import com.example.studyrestapi.demo.accounts.Account;
 import com.example.studyrestapi.demo.accounts.AccountRepository;
 import com.example.studyrestapi.demo.accounts.AccountRole;
 import com.example.studyrestapi.demo.accounts.AccountService;
+import com.example.studyrestapi.demo.common.AppProperties;
 import com.example.studyrestapi.demo.common.BaseControllerTest;
 import com.example.studyrestapi.demo.common.TestDescription;
-import net.bytebuddy.asm.Advice;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +43,9 @@ public class EventControllerTest extends BaseControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    AppProperties appProperties;
 
     @Before
     public void setUp(){
@@ -143,8 +146,8 @@ public class EventControllerTest extends BaseControllerTest {
 
     private String getBearerToken() throws Exception {
         //Given
-        String username = "0550551@055055.com";
-        String password = "055055";
+        String username = appProperties.getAdminUsername();
+        String password = appProperties.getAdminPassword();
         Account account = Account.builder()
                 .email(username)
                 .password(password)
@@ -152,8 +155,8 @@ public class EventControllerTest extends BaseControllerTest {
                 .build();
         this.accountService.saveAccount(account);
 
-        String clientId = "myApp";
-        String clientSecret = "pass";
+        String clientId = appProperties.getClientId();
+        String clientSecret = appProperties.getClientSecret();
 
 
         ResultActions perform = this.mockMvc.perform(post("/oauth/token")

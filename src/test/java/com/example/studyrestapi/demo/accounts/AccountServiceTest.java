@@ -1,5 +1,6 @@
 package com.example.studyrestapi.demo.accounts;
 
+import com.example.studyrestapi.demo.common.AppProperties;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,21 +36,24 @@ public class AccountServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    AppProperties appProperties;
+
     @Test
     public void findByUsername(){
         //Given
-        Set<AccountRole> role = new HashSet<AccountRole>();
-        role.add(AccountRole.ADMIN);
-        role.add(AccountRole.USER);
-
-        String password = "055055";
-        String username = "055055@055055.com";
-        Account account = Account.builder()
-                                .email(username)
-                                .password(password)
-                                .roles(role)
-                                .build();
-        this.accountService.saveAccount(account);
+//        Set<AccountRole> role = new HashSet<AccountRole>();
+//        role.add(AccountRole.ADMIN);
+//        role.add(AccountRole.USER);
+//
+        String password = appProperties.getAdminPassword();
+        String username = appProperties.getAdminUsername();
+//        Account account = Account.builder()
+//                                .email(username)
+//                                .password(password)
+//                                .roles(role)
+//                                .build();
+//        this.accountService.saveAccount(account);
 
         //When
         UserDetailsService userDetailsService = (UserDetailsService)accountService;

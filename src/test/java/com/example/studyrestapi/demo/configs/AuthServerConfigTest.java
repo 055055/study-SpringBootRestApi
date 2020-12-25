@@ -3,6 +3,7 @@ package com.example.studyrestapi.demo.configs;
 import com.example.studyrestapi.demo.accounts.Account;
 import com.example.studyrestapi.demo.accounts.AccountRole;
 import com.example.studyrestapi.demo.accounts.AccountService;
+import com.example.studyrestapi.demo.common.AppProperties;
 import com.example.studyrestapi.demo.common.BaseControllerTest;
 import com.example.studyrestapi.demo.common.TestDescription;
 import org.junit.Test;
@@ -25,23 +26,26 @@ public class AuthServerConfigTest extends BaseControllerTest {
     @Autowired
     AccountService accountService;
 
+    @Autowired
+    AppProperties appProperties;
+
     @Test
     @TestDescription("인증 토큰을 발급 받는 테스트")
     public void getAuthToken() throws  Exception{
         //Given
-        String username = "0550551@055055.com";
-        String password = "055055";
-        Account account = Account.builder()
-                            .email(username)
-                            .password(password)
-                            .roles(Stream.of(AccountRole.ADMIN, AccountRole.USER).collect(Collectors.toSet()))
-                            .build();
-        this.accountService.saveAccount(account);
+        String username = appProperties.getAdminUsername();
+        String password = appProperties.getAdminPassword();
+//        Account account = Account.builder()
+//                            .email(username)
+//                            .password(password)
+//                            .roles(Stream.of(AccountRole.ADMIN, AccountRole.USER).collect(Collectors.toSet()))
+//                            .build();
+//        this.accountService.saveAccount(account);
 
-        String clientId = "myApp";
-        String clientSecret = "pass";
+        String clientId = appProperties.getClientId();
+        String clientSecret = appProperties.getClientSecret();
 
-
+        //When & Then
         this.mockMvc.perform(post("/oauth/token")
                     .with(httpBasic(clientId, clientSecret)) //basicAuth header 생성
                     .param("username", username)
