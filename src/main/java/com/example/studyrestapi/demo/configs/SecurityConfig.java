@@ -55,16 +55,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //PathRequest.toStaticResources().atCommonLocations() Springboot가 제공하는 Static Resource들에 대한 기본 위치를 다 가져옴
     }
 
-    //web과 달리 http로 거르는 방법. 아래는 filter를 거쳐야해서 굳이 static에만 접근할거라면 web에서 하는게 낫다.
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-            .anonymous()
-                .and()
-            .formLogin()
-                .and()
-            .authorizeRequests()
-                .mvcMatchers(HttpMethod.GET, "/api/**").anonymous()
-                .anyRequest().authenticated();
-    }
+
 }
