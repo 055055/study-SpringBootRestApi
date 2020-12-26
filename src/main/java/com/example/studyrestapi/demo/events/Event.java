@@ -1,8 +1,9 @@
 package com.example.studyrestapi.demo.events;
 
 import com.example.studyrestapi.demo.accounts.Account;
+import com.example.studyrestapi.demo.accounts.AccountSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus = EventStatus.DRAFT;
     @ManyToOne
+    @JsonSerialize(using = AccountSerializer.class)
     private Account manager;
 
     public void update(){
